@@ -58,20 +58,17 @@ namespace WebApi.Controllers
             var result = _imageService.GetAll();
             if (result.Success)
             {
-                return Ok(result.Data);
+
+                List<ResponseImage> images = new List<ResponseImage>();
+                foreach (var item in result.Data)
+                {
+                    images.Add(new ResponseImage() { Id = item.Id, Name = item.ImageName, ImageBytes = System.IO.File.ReadAllBytes(item.ImagePath) });
+                }
+                return Ok(images);
             }
             return BadRequest(result);
         }
 
-        [HttpGet("GetById")]
-        public IActionResult GetById(int id)
-        {
-            var result = _imageService.GetById(id);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
+
     }
 }
